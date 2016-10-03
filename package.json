@@ -1,0 +1,18 @@
+{
+  "name": "thegrid",
+  "version": "1.0.0",
+  "description": "Test The Grid.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "grid"
+  ],
+  "author": "camel zerrouqi",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^1.13.2",
+    "webpack-shell-plugin": "^0.4.3"
+  }
+}

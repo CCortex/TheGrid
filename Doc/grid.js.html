@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: grid.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: grid.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Represents the grid.
+ * The grid is composed of squares.
+ */
+class Grid {
+    /**
+     * Grid Constructor - The grid is an Array of squares, it would be easier to use a 2D array for this task but using a 1D array is better in terms of performance (faster).
+     * @constructor
+     * @param {int} factor - Factor for the square number in the grid, ex : factor = 5, 5 * 5 = 25 squares
+     */
+    constructor(factor) {
+        this.grid = new Array();
+        this._factorGrid = factor;
+        var ArraySize = this.factorGrid * this.factorGrid;
+        for (let i = 0; i &lt; ArraySize; i++) {
+            this.grid.push(new Square(this.F1(), 0));
+        }
+    }
+
+    /**
+     * Accessor for factorGrid
+     * @AccessorFactorGrid
+     */
+    set factorGrid(factorGrid) { this._factorGrid = factorGrid; }
+    get factorGrid() { return this._factorGrid; }
+
+    /**
+     * F1 - Gives a state to a square (Function given in the test)
+     * @F1
+     * @return {int} state for the square - 1 or 0
+     */
+    F1() {
+        return (Math.floor(Math.random() * 3) + 1) > 1 ? 1 : 0;
+    }
+
+    /**
+     * F2 - Heart of the app, this is where the algorithm is.
+     * Square's color will be set correctly after calling this method
+     * @F2
+     */
+    F2() {
+        for (let x = 0; x &lt; this.grid.length; x += this.factorGrid) {
+            for (let y = 0; y &lt; this.factorGrid; y++) {
+                if (this.grid[x + y].state == 1) {
+                    var contact = 0;
+                    var idx = x + y;
+
+                    //Check  x - 1
+                    if (x == 0 &amp;&amp; (idx > 0) &amp;&amp; this.grid[idx - 1].state == 1) {
+                        ++contact;
+                    } else if (x > 0 &amp;&amp; idx > x &amp;&amp; this.grid[idx - 1].state == 1) {
+                        ++contact;
+                    }
+
+                    //Check x + 1
+                    if (idx &lt; (((x / this.factorGrid) * this.factorGrid) + (this.factorGrid - 1)) &amp;&amp; idx &lt; (this.grid.length - 1) &amp;&amp; this.grid[idx + 1].state == 1) {
+                        ++contact;
+                    }
+
+                    //Check y - 1
+                    if (x > 0 &amp;&amp; this.grid[idx - this.factorGrid].state == 1) {
+                        ++contact;
+                    }
+
+                    //Check y + 1   idx &lt; (this.grid.length - this.factorGrid)
+                    if (x &lt; (this.factorGrid * (this.factorGrid - 1)) &amp;&amp; this.grid[idx + this.factorGrid].state == 1) {
+                        ++contact;
+                    }
+
+                    this.grid[idx].contact = contact;
+                }
+            }
+        }
+    }
+
+    /**
+     * PrintGrid - Method outputting the square's state in the console
+     * @PrintGrid
+     */
+    PrintGrid() {
+        console.log("- Grid state -");
+        for (let y = 0; y &lt; this.grid.length; y += this.factorGrid) {
+            var ln = '';
+            for (let x = 0; x &lt; this.factorGrid; x++) {
+                ln += this.grid[x + y].state == 1 ? '[1]' : '[0]';
+            }
+            console.log(ln);
+        }
+    }
+
+    /**
+     * PrintGridContact - Method outputting the square's contact in the console
+     * @PrintGridContact
+     */
+    PrintGridContact() {
+        console.log("- Grid contact -");
+        for (let y = 0; y &lt; this.grid.length; y += this.factorGrid) {
+            var ln = '';
+            for (let x = 0; x &lt; this.factorGrid; x++) {
+                ln += '[' + this.grid[x + y].contact + ']';
+            }
+            console.log(ln);
+        }
+    }
+
+    /**
+     * PrintInCanvas - Method outputting the grid in the canvas
+     * @PrintInCanvas
+     * @param {int} ctx - Context of the canvas
+     * @param {int} width - Width of the canvas
+     * @param {int} height - Height of the canvas
+     */
+    PrintInCanvas(ctx, width = 100, height = 100) {
+        if (ctx === undefined) {
+            return;
+        }
+        if (width &lt; 100) {
+            width = 100;
+        }
+        if (height &lt; 100) {
+            height = 100;
+        }
+
+        var widthSquare = width / this.factorGrid;
+        var heightSquare = height / this.factorGrid;
+
+        //Draw the grid with the right color
+        for (let y = 0, yd = 0; y &lt; this.grid.length; y += this.factorGrid, yd += heightSquare) {
+            for (let x = 0, xd = 0; x &lt; this.factorGrid; x++, xd += widthSquare) {
+                ctx.fillStyle = this.grid[x + y].colorRGB;
+                ctx.fillRect(xd, yd, widthSquare, heightSquare);
+            }
+        }
+    }
+}
+
+var grid = Grid;
+module.exports = grid;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Grid.html">Grid</a></li><li><a href="Square.html">Square</a></li></ul><h3>Global</h3><ul><li><a href="global.html#contactColorDic">contactColorDic</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.1</a> on Mon Oct 03 2016 23:42:16 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
